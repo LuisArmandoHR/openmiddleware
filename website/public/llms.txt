@@ -1,0 +1,183 @@
+# OpenMiddleware
+
+> Universal, type-safe middleware framework for JavaScript runtimes
+
+OpenMiddleware is a zero-dependency middleware framework that works with Express, Hono, Koa, Fastify, and native Fetch API. Write your middleware once and use it everywhere.
+
+## Quick Start
+
+```typescript
+import { createChain, logger, cors, auth } from '@openmiddleware/chain';
+import { toHono } from '@openmiddleware/hono';
+import { Hono } from 'hono';
+
+const app = new Hono();
+
+const chain = createChain()
+  .use(logger({ level: 'info' }))
+  .use(cors({ origin: '*' }))
+  .use(auth({ jwt: { secret: 'my-secret' } }));
+
+app.use('*', toHono(chain));
+app.get('/api/users', (c) => c.json({ users: [] }));
+```
+
+## Installation
+
+```bash
+npm install @openmiddleware/chain
+```
+
+For framework adapters:
+```bash
+npm install @openmiddleware/express
+npm install @openmiddleware/hono
+npm install @openmiddleware/koa
+npm install @openmiddleware/fastify
+```
+
+## Core Concepts
+
+### Middleware Chain
+
+Create a middleware chain using the builder pattern:
+
+```typescript
+const chain = createChain()
+  .use(middleware1)
+  .use(middleware2)
+  .use(middleware3);
+
+const result = await chain.execute(request);
+```
+
+### Functional Composition
+
+Use pipe() for functional-style composition:
+
+```typescript
+const middleware = pipe(logger(), cors(), auth());
+```
+
+### Type-Safe State
+
+Middleware can pass typed state to handlers:
+
+```typescript
+interface AppState extends AuthState, ValidatedState {}
+
+const chain = createChain<AppState>()
+  .use(auth({ jwt: { secret: 'my-secret' } }))
+  .use(validator({ body: userSchema }));
+
+// result.state is fully typed
+```
+
+## Built-in Middlewares
+
+1. **request-id** - Adds unique request ID
+2. **logger** - Structured logging
+3. **cors** - Cross-origin resource sharing
+4. **helmet** - Security headers
+5. **timeout** - Request timeout
+6. **error-handler** - Error handling
+7. **rate-limit** - Rate limiting
+8. **cache** - Response caching
+9. **compress** - Response compression
+10. **body-parser** - Body parsing
+11. **auth** - JWT, API key, Basic auth
+12. **validator** - Request validation
+
+## Framework Adapters
+
+### Express
+
+```typescript
+import { toExpress } from '@openmiddleware/express';
+app.use(toExpress(chain));
+```
+
+### Hono
+
+```typescript
+import { toHono } from '@openmiddleware/hono';
+app.use('*', toHono(chain));
+```
+
+### Koa
+
+```typescript
+import { toKoa } from '@openmiddleware/koa';
+app.use(toKoa(chain));
+```
+
+### Fastify
+
+```typescript
+import { toFastify } from '@openmiddleware/fastify';
+fastify.register(toFastify(chain));
+```
+
+## Creating Custom Middleware
+
+```typescript
+const myMiddleware = createMiddleware({
+  name: 'my-middleware',
+  handler: async (ctx, next) => {
+    // Before next middleware
+    console.log('Request:', ctx.request.url);
+
+    await next();
+
+    // After next middleware
+    ctx.response.setHeader('X-Custom', 'value');
+
+    return { done: false };
+  },
+});
+```
+
+## Validation Schema (Built-in z)
+
+```typescript
+const userSchema = z.object({
+  name: z.string().min(1).max(100),
+  email: z.string().email(),
+  age: z.number().int().min(0).optional(),
+  role: z.literal('user').or(z.literal('admin')),
+});
+
+const chain = createChain()
+  .use(validator({ body: userSchema }));
+```
+
+## Error Classes
+
+- ValidationError - Request validation failed
+- AuthenticationError - Authentication failed
+- AuthorizationError - Authorization failed
+- RateLimitError - Rate limit exceeded
+- TimeoutError - Request timed out
+
+## Testing
+
+```typescript
+import { testMiddleware, mockRequest, matchers } from '@openmiddleware/testing';
+
+const result = await testMiddleware(cors({ origin: '*' }), {
+  url: 'https://api.example.com',
+  headers: { Origin: 'https://example.com' },
+});
+
+expect(result.response).toHaveHeader('Access-Control-Allow-Origin', '*');
+```
+
+## Links
+
+- Website: https://openmiddleware.dev
+- GitHub: https://github.com/ersinkoc/openmiddleware
+- npm: https://www.npmjs.com/package/@openmiddleware/chain
+
+## License
+
+MIT License - Ersin KOC

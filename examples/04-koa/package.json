@@ -1,0 +1,21 @@
+{
+  "name": "example-koa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "OpenMiddleware with Koa example",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@openmiddleware/chain": "workspace:*",
+    "@openmiddleware/koa": "workspace:*",
+    "koa": "^2.15.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.15.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.8.0"
+  }
+}

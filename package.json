@@ -1,0 +1,38 @@
+{
+  "name": "openmiddleware",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Universal, type-safe middleware framework for any JavaScript runtime",
+  "author": "Ersin Koc",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenMiddleware/chain.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OpenMiddleware/chain/issues"
+  },
+  "homepage": "https://openmiddleware.dev",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "test:coverage": "pnpm -r run test:coverage",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "pnpm -r exec rm -rf dist coverage .turbo",
+    "prepare": "pnpm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "prettier": "^3.4.0",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "example-fastify",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "OpenMiddleware with Fastify example",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@openmiddleware/chain": "workspace:*",
+    "@openmiddleware/fastify": "workspace:*",
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.8.0"
+  }
+}
